@@ -16,6 +16,7 @@ import Payment from "../pages/dashboard/PaymentPage"
 import Page404 from "../pages/Page404";
 import KYCRequestPage from "../pages/dashboard/KYCRequestPage";
 import LoanRequestPage from "../pages/dashboard/LoanRequestPage";
+import KycStatus from "../pages/dashboard/KycStatusPage";
 
 export default function Router(){
     return useRoutes([
@@ -27,6 +28,7 @@ export default function Router(){
                {path:'/auth/login', element:<LoginPage/>},
                {path:'/auth/signup', element:<SignupPage/>},
                {path:'/auth/kyc', element:<KYC/>},
+               {path:'/auth/kycstatus', element:<KycStatus/>},
             ]
         },
         {
