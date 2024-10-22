@@ -7,9 +7,9 @@ const initialState = {
   isLoggedIn: false,
   email: "",
   error: false,
-  role:null,
-  token:null,
-  user_id:null,
+  role: null,
+  token: null,
+  user_id: null,
 };
 
 const slice = createSlice({
@@ -22,18 +22,18 @@ const slice = createSlice({
     }, */
     logIn(state, action) {
       state.isLoggedIn = action.payload.isLoggedIn;
-       state.token = action.payload.token;
+      state.token = action.payload.token;
       state.role = action.payload.role;
       state.user_id = action.payload.user_id;
       state.email = action.payload.email;
     },
-     signOut(state, action) {
+    signOut(state, action) {
       state.isLoggedIn = false;
-       state.token = null;
+      state.token = null;
       state.user_id = null;
-      state.role=null;
-      state.email=""; 
-    }, 
+      state.role = null;
+      state.email = "";
+    },
     /* updateRegisterEmail(state, action) {
       state.email = action.payload.email;
     }, */
@@ -48,7 +48,7 @@ export function LoginUser(formValues) {
     try {
       const response = await axios.post("auth/login", formValues);
 
-      const {token,role , user_id, message, } = response.data;
+      const { token, role, user_id, message, } = response.data;
 
       dispatch(
         slice.actions.logIn({
@@ -62,7 +62,7 @@ export function LoginUser(formValues) {
 
       window.localStorage.setItem("user_id", user_id);
       //window.localStorage.setItem("token", token);
-      toast.success(message|| "Login Successful");
+      toast.success(message || "Login Successful");
 
     } catch (error) {
       toast.error(error.message || "Login failed.");
@@ -73,33 +73,32 @@ export function LoginUser(formValues) {
   };
 }
 
- export function LogoutUser() {
+export function LogoutUser() {
   return async (dispatch, getState) => {
     window.location.reload();
     dispatch(slice.actions.signOut());
   };
-} 
+}
 
- export function RegisterUser(formValues) {
+export function RegisterUser(formValues) {
   return async (dispatch, getState) => {
     let response;
     try {
-       response = await axios.post("auth/register", formValues);
-const {user_id , message} = response.data;
-      
+      response = await axios.post("auth/register", formValues);
+      const { user_id, message } = response.data;
+
 
       window.localStorage.setItem("user_id", user_id);
       //window.localStorage.setItem("token", token);
-      toast.success(message|| "Login Successful");
+      toast.success(message || "Login Successful");
 
     } catch (error) {
       toast.error(error.message || "Login failed.");
-       //dispatch(slice.actions.updateIsLoading({ isLoading: false, error: true }));
+      //dispatch(slice.actions.updateIsLoading({ isLoading: false, error: true }));
     } finally {
-      if(!getState().auth.error){
-        window.location.href = "/auth/kyc";
+      if (!getState().auth.error) {
+        window.location.href = "/auth/kyc"
         const {token,role , user_id } = response.data;
-
       dispatch(
         slice.actions.logIn({
           isLoggedIn:true,
@@ -108,10 +107,9 @@ const {user_id , message} = response.data;
           user_id,
           email: formValues.email,
         })
-      );
-  
+      )
+
       }
-      
 
     }
   };
