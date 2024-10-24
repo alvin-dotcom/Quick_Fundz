@@ -1,7 +1,21 @@
-import React from 'react';
-
+import {useDispatch, useSelector} from 'react-redux';
+import { verifiedKyc } from '../redux/slices/auth';
 const KYCStatus = () => {
-  const status = 'Pending'; 
+  const {verificationStatus,user_id}=useSelector((state)=>state.auth)
+  console.log(verificationStatus)
+  let status;
+  if(verificationStatus ==='pending'){
+     status = 'pending';
+  }
+   if(verificationStatus ==='confirm'){
+    status ='Approved';
+  }
+
+  if(verificationStatus ==='Not verified'){
+    status = 'Rejected'
+  }
+    
+   
 
   const statusMessage = () => {
     if (status === 'Approved') {
@@ -14,7 +28,14 @@ const KYCStatus = () => {
   };
 
   const { message, bgColor, textColor } = statusMessage();
-
+  const dispatch = useDispatch();
+  const handleClick = async (status) => {
+    const data={
+      status:status,
+      user_id:user_id
+    }
+    dispatch(verifiedKyc(data))
+  };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-gray-100 to-gray-300 p-4">
       <div className={`p-6 md:p-8 rounded-lg shadow-lg max-w-sm w-full sm:max-w-md lg:max-w-lg mx-auto ${bgColor}`}>
@@ -24,6 +45,13 @@ const KYCStatus = () => {
           {status === 'Rejected' && (
             <button className="bg-blue-600 text-white py-2 px-4 rounded-lg w-full font-semibold hover:bg-blue-700 transition">
               Contact Support
+            </button>
+          )}
+        </div>
+        <div className="mt-8 text-center">
+          {status === 'Approved' && (
+            <button onClick={()=>handleClick('verified')} className="bg-cyan-800 text-white py-2 px-4 rounded-lg w-full font-semibold hover:bg-blue-700 transition">
+              Explore
             </button>
           )}
         </div>
