@@ -17,7 +17,7 @@ const connectPostgresDB = async () => {
 
         // Test the connection
         const client = await pool.connect();
-        console.log(`\n PostgreSQL connected! DB HOST: ${client.host}`);
+        console.log(`\n PostgreSQL connected!`);
         client.release(); // Release the client after use
 
         return pool; // Return the pool instance to be used elsewhere
