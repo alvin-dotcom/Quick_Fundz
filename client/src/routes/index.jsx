@@ -16,7 +16,7 @@ import Payment from "../pages/dashboard/PaymentPage"
 import Page404 from "../pages/Page404";
 import KYCRequestPage from "../pages/dashboard/KYCRequestPage";
 import LoanRequestPage from "../pages/dashboard/LoanRequestPage";
-import KycStatus from "../pages/dashboard/KycStatusPage";
+import KycStatus from "../pages/dashboard/KYCStatusPage"
 
 export default function Router(){
     return useRoutes([
