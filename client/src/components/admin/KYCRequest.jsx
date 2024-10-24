@@ -1,31 +1,70 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { confirmOrRejectRequest, showKycRequest } from '../../redux/slices/auth';
 import { LogoutUser } from '../../redux/slices/auth';
 import { useDispatch } from 'react-redux';
 import Sidebar from '../Sidebar';
 
 const KYCRequest = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [allRequest , setAllRequest] = useState(null);
   const usersPerPage = 8;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    const fetchKycRequests = async () => {
+      try {
+        const user = await dispatch(showKycRequest()); // Await the response from dispatch
+       setAllRequest(user.listOfRequest); // Log the result, which should be the response data
+      } catch (error) {
+        console.error("Error fetching KYC requests: ", error);
+      }
+    };
+
+    fetchKycRequests();
+  },[dispatch])
   // Sample user data for display
-  const users = Array(41).fill({
+  /* const users = Array(41).fill({
     name: 'John Doe',
     aadharNo: 'XXXX-XXXX-XXXX',
     phone: '1234567890',
     address: '123 Main St, City, State',
-  });
+  }); */
 
   // Pagination logic
   const lastIndex = currentPage * usersPerPage;
   const firstIndex = lastIndex - usersPerPage;
-  const currentUsers = users.slice(firstIndex, lastIndex);
-  const totalPages = Math.ceil(users.length / usersPerPage);
-  const dispatch = useDispatch();
+  const currentUsers = allRequest ? allRequest.slice(firstIndex, lastIndex) : [];
+  const totalPages = allRequest ? Math.ceil(allRequest.length / usersPerPage) : 0;
+  
   // Handle page change
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+  const handleUserRemoval = (userId)=>{
+    const updatedRequestList=allRequest.filter(user=>user.id !==userId);
+    setAllRequest(updatedRequestList);
+  }
+
+  const handleConfirm=(userId,usersId,status)=>{
+    const data={
+      userId:userId,
+      usersId:usersId,
+      status:status
+    }
+    dispatch(confirmOrRejectRequest(data))
+    handleUserRemoval(userId);
+  }
+
+  const handleReject = (userId,usersId,status)=>{
+    const data={
+      userId:userId,
+      usersId:usersId,
+      status:status
+    }
+    dispatch(confirmOrRejectRequest(data))
+    handleUserRemoval(userId);
+  }
   const handleLogout = (e)=>{
     e.preventDefault();
     dispatch(LogoutUser());
@@ -46,15 +85,15 @@ const KYCRequest = () => {
           <div key={index} className="border p-4 rounded-lg flex justify-between items-center">
             <div>
               <p><strong>Name:</strong> {user.name}</p>
-              <p><strong>Aadhar No:</strong> {user.aadharNo}</p>
+              <p><strong>Email:</strong> {user.email}</p>
             </div>
             <div>
-            <p><strong>Phone:</strong> {user.phone}</p>
-            <p><strong>Address:</strong> {user.address}</p>
+            <p><strong>Phone:</strong> {user.phone_number}</p>
+            <p><strong>Aadhar Number:</strong> {user.aadhar_number}</p>
             </div>
             <div className="space-2 gap-2 flex flex-col ">
-              <button className="bg-green-500 text-white px-4 py-2 rounded-full">Confirm</button>
-              <button className="bg-red-500 text-white px-4 py-2 rounded-full">Reject</button>
+              <button className="bg-green-500 text-white px-4 py-2 rounded-full" value={"confirm"} onClick={()=>handleConfirm(user.id,user.user_id,'confirm') }>Confirm</button>
+              <button className="bg-red-500 text-white px-4 py-2 rounded-full" value={"Not verified"} onClick={()=>handleReject(user.id,user.user_id,'Not verified')}>Reject</button>
               <button className="bg-blue-500 text-white px-4 py-2 rounded-full">View</button>
             </div>
           </div>
