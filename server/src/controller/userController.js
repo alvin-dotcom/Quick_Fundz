@@ -5,6 +5,9 @@ const asyncHandler= require("../utils/asyncHandler")
 const filterObj = require("../utils/filterObj")
 
  let pool;
+ (async()=>{
+  pool = await connectPostgresDB();
+ })();
  
 exports.registerUser = asyncHandler(async(req, res, next)=>{
     const { username, email, password } = req.body;
@@ -30,10 +33,21 @@ exports.registerUser = asyncHandler(async(req, res, next)=>{
     );
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
-    ]); 
+    ]);
+    
     const role = user.rows[0].role
     const user_id=user.rows[0].id; 
-    res.status(201).json({ message: "User registered successfully" ,role,user_id});
+    const verificationStatus=user.rows[0].is_verified;
+    const token = jwt.sign(
+      { userId: user.rows[0].id },
+      process.env.JWT_SECRET,
+      { expiresIn: "360000h" }
+    );
+    const options = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+  }
+    res.cookie("token",token,options).status(201).json({ message: "User registered successfully" ,role,user_id,verificationStatus});
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
@@ -44,7 +58,7 @@ exports.loginUser= asyncHandler(async(req,res)=>{
     const { email, password } = req.body;
 
     try {
-       pool = await connectPostgresDB();
+       
       const user = await pool.query("SELECT * FROM users WHERE email = $1", [
         email,
       ]);
@@ -66,7 +80,8 @@ exports.loginUser= asyncHandler(async(req,res)=>{
       );
   const role = user.rows[0].role
   const user_id=user.rows[0].id;
-      res.json({ token, role , user_id});
+  const verificationStatus=user.rows[0].is_verified;
+      res.json({ token, role , user_id,verificationStatus});
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Server error" });
