@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 //import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { UserKyc } from '../redux/slices/auth';
+import { useDispatch } from 'react-redux';
 
 const KYC = () => {
   const [fullName, setFullName] = useState('');
@@ -9,31 +11,18 @@ const KYC = () => {
   const [aadharNumber, setAadharNumber] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const data={
+    fullName: fullName,
+    email:email,
+    phoneNumber:phoneNumber,
+    aadharNumber:aadharNumber,
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/menu");
-    /* try {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError) throw userError;
-      if (!user) throw new Error('User is not authenticated');
-
-      const { error: kycError } = await supabase
-        .from('kyc_details')
-        .insert([{ 
-          user_id: user.id, 
-          full_name: fullName, 
-          email: email,
-          phone_number: phoneNumber, 
-          aadhar_number: aadharNumber 
-        }]);
-
-      if (kycError) throw kycError;
-
-      window.location.href = '/menu'; 
-    } catch (err) {
-      setError(err.message);
-    } */
+    
+    dispatch(UserKyc(data))
   };
 
   return (
