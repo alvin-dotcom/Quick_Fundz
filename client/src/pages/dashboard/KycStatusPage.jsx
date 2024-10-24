@@ -1,7 +1,7 @@
 import React from 'react'
 import KycStatus from '../../components/KycStatus'
 
-function InvestPage() {
+function KYCStatus() {
   return (
     <>
     <KycStatus/>
@@ -9,4 +9,4 @@ function InvestPage() {
   )
 }
 
-export default KycStatus
+export default KYCStatus
