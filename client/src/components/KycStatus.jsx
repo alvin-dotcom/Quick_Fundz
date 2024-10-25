@@ -1,8 +1,10 @@
 import {useDispatch, useSelector} from 'react-redux';
 import { verifiedKyc } from '../redux/slices/auth';
+import { useNavigate } from 'react-router-dom';
 const KYCStatus = () => {
-  const {verificationStatus,user_id}=useSelector((state)=>state.auth)
-  console.log(verificationStatus)
+  const {verificationStatus,user_id,kycMessage}=useSelector((state)=>state.auth)
+  const navigate = useNavigate();
+
   let status;
   if(verificationStatus ==='pending'){
      status = 'pending';
@@ -21,7 +23,7 @@ const KYCStatus = () => {
     if (status === 'Approved') {
       return { message: 'Your KYC is Approved.', bgColor: 'bg-green-100', textColor: 'text-green-600' };
     } else if (status === 'Rejected') {
-      return { message: 'Your KYC was Rejected. Please contact support.', bgColor: 'bg-red-100', textColor: 'text-red-600' };
+      return { message: `Your KYC was Rejected. (${kycMessage})`, bgColor: 'bg-red-100', textColor: 'text-red-600' };
     } else {
       return { message: 'Your KYC is Pending. We will notify you once it is processed.', bgColor: 'bg-yellow-100', textColor: 'text-yellow-600' };
     }
@@ -43,8 +45,8 @@ const KYCStatus = () => {
         <p className={`text-lg text-center font-semibold ${textColor}`}>{message}</p>
         <div className="mt-8 text-center">
           {status === 'Rejected' && (
-            <button className="bg-blue-600 text-white py-2 px-4 rounded-lg w-full font-semibold hover:bg-blue-700 transition">
-              Contact Support
+            <button onClick={() => navigate('/auth/updatekyc')} className="bg-blue-600 text-white py-2 px-4 rounded-lg w-full font-semibold hover:bg-blue-700 transition">
+              Update Details
             </button>
           )}
         </div>
