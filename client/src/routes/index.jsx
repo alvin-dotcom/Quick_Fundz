@@ -9,6 +9,7 @@ import LoginPage from "../pages/auth/Login";
 import SignupPage from "../pages/auth/SignUp"
 
 import Invest from "../pages/dashboard/InvestPage"
+import UpdateKYC from "../pages/dashboard/UpdateKYCPage"
 import KYC from "../pages/dashboard/KYCPage"
 import Loan from "../pages/dashboard/LoanPage"
 import Menu from "../pages/dashboard/MenuPage"
@@ -29,6 +30,7 @@ export default function Router(){
                {path:'/auth/signup', element:<SignupPage/>},
                {path:'/auth/kyc', element:<KYC/>},
                {path:'/auth/kycstatus', element:<KycStatus/>},
+               {path:'/auth/updatekyc',element:<UpdateKYC/>},
             ]
         },
         {
