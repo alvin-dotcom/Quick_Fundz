@@ -11,6 +11,7 @@ const initialState = {
   token: null,
   user_id: null,
   verificationStatus:'pending',
+  kycMessage: null,
 };
 
 const slice = createSlice({
@@ -28,6 +29,7 @@ const slice = createSlice({
       state.verificationStatus = action.payload.verificationStatus;
       state.user_id = action.payload.user_id;
       state.email = action.payload.email;
+      state.kycMessage = action.payload.kycMessage;
     },
     signOut(state, action) {
       state.isLoggedIn = false;
@@ -55,7 +57,7 @@ export function LoginUser(formValues) {
     try {
       const response = await axios.post("auth/login", formValues);
 
-      const { token, role, user_id, message, verificationStatus} = response.data;
+      const { token, role, user_id, message, verificationStatus,kycMessage} = response.data;
       console.log(response.data)
       if(verificationStatus === 'verified'){
         dispatch(
@@ -72,7 +74,8 @@ export function LoginUser(formValues) {
         dispatch(
           slice.actions.logIn({
             user_id,
-            verificationStatus
+            verificationStatus,
+            kycMessage
           })
         )
         window.location.href='/auth/kycstatus'
