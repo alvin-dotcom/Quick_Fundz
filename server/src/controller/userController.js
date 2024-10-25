@@ -72,16 +72,17 @@ exports.loginUser= asyncHandler(async(req,res)=>{
       if (!validPassword) {
         return res.status(400).json({ error: "Invalid credentials" });
       }
-  
+      const kycUser = await pool.query("Select * from user_kyc_details WHERE email = $1",[email]);
       const token = jwt.sign(
         { userId: user.rows[0].id },
         process.env.JWT_SECRET,
         { expiresIn: "360000h" }
       );
-  const role = user.rows[0].role
+  const kycMessage = kycUser.rows[0]?.message;
+  const role = user.rows[0].role;
   const user_id=user.rows[0].id;
   const verificationStatus=user.rows[0].is_verified;
-      res.json({ token, role , user_id,verificationStatus});
+      res.json({ token, role , user_id,verificationStatus,kycMessage});
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Server error" });

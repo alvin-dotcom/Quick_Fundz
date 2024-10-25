@@ -17,9 +17,9 @@ exports.showKycRequest=asyncHandler(async(req,res)=>{
 })
 
 exports.confirm_OR_Reject_user=asyncHandler(async(req,res)=>{
-    const {status,userId,usersId} = req.body;
+    const {status,userId,usersId,message} = req.body;
     try {
-        const userStatus= await pool.query("UPDATE user_kyc_details SET is_verified = $1 WHERE id = $2",[status,userId]);
+        const userStatus= await pool.query("UPDATE user_kyc_details SET is_verified = $1,message=$2 WHERE id = $3",[status,message,userId]);
         const updateUser= await pool.query("UPDATE users SET is_verified = $1 WHERE id = $2",[status,usersId])
 
         return res.status(200).json({
