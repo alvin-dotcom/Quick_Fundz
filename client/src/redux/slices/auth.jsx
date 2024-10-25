@@ -189,9 +189,29 @@ export function confirmOrRejectRequest(formValues){
   return async(dispatch,getState)=>{
     try {
       const response = await axios.post('admin/confirmOrRejectUser',formValues);
-      console.log(response.data);
     } catch (error) {
       console.log(error.message)
+    }
+  }
+}
+
+export function rejectedkyc(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.post('auth/updatekyc',formValues);
+      const {message,verificationStatus}=response.data;
+      toast.success(message || "KYC under processing ");
+      dispatch(
+        slice.actions.verifiedUser({
+          verificationStatus
+        })
+      )
+      if(!getState().auth.error){
+       window.location.href = "/auth/kycstatus" 
+           }
+    } catch (error) {
+      toast.error(error.message)
+
     }
   }
 }
