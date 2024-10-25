@@ -1,13 +1,15 @@
 import { useState } from 'react';
 //import { supabase } from '../supabaseClient';
 import { useDispatch, useSelector } from 'react-redux';
-import { rejectedkyc, UserKyc} from '../redux/slices/auth';
+import { rejectedkyc} from '../redux/slices/auth';
 
 const UpdateKYC = () => {
   const [fullName, setFullName] = useState('');
   //const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [aadharNumber, setAadharNumber] = useState('');
+  const [bankNumber, setBankNumber] = useState('');
+  const [IFSCCode, setIFSCNumber] = useState('');
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const {user_id}=useSelector((state)=>state.auth);
@@ -17,7 +19,9 @@ console.log(user_id)
     //email:email,
     phoneNumber:phoneNumber,
     aadharNumber:aadharNumber,
-    userId:user_id
+    userId:user_id,
+    bankNumber:bankNumber,
+    IFSCCode:IFSCCode,
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,16 +48,6 @@ console.log(user_id)
               required
             />
           </div>
-          {/* <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div> */}
           <div className="mb-4">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
             <input
@@ -70,6 +64,26 @@ console.log(user_id)
               type="text"
               value={aadharNumber}
               onChange={(e) => setAadharNumber(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Bank Account Number</label>
+            <input
+              type="number"
+              value={bankNumber}
+              onChange={(e) => setBankNumber(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">IFSC Code</label>
+            <input
+              type="text"
+              value={IFSCCode}
+              onChange={(e) => setIFSCNumber(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
