@@ -4,10 +4,14 @@ import { confirmOrRejectRequest, showKycRequest } from '../../redux/slices/auth'
 import { LogoutUser } from '../../redux/slices/auth';
 import { useDispatch } from 'react-redux';
 import Sidebar from '../Sidebar';
+import RejectionOverlay from './RejectionOverlay';
 
 const KYCRequest = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [allRequest , setAllRequest] = useState(null);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false); 
+  const [currentRejectUserId, setCurrentRejectUserId] = useState(null);
+  const [currentRejectUsersId, setCurrentRejectUsersId] = useState(null);
   const usersPerPage = 8;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,15 +60,24 @@ const KYCRequest = () => {
     handleUserRemoval(userId);
   }
 
-  const handleReject = (userId,usersId,status)=>{
-    const data={
-      userId:userId,
-      usersId:usersId,
-      status:status
-    }
-    dispatch(confirmOrRejectRequest(data))
-    handleUserRemoval(userId);
-  }
+  const handleReject = (userId, usersId) => {
+    setCurrentRejectUserId(userId); // Store userId in state
+    setCurrentRejectUsersId(usersId); // Store usersId in state
+    setIsOverlayOpen(true); // Open overlay
+  };
+
+  // Handle rejection submission
+  const handleSubmitRejection = (message) => {
+    console.log(message);
+    const data = {
+      userId: currentRejectUserId, // Use the stored userId
+      usersId: currentRejectUsersId, // Use the stored usersId
+      status: 'Not verified',
+      message:message
+    };
+    dispatch(confirmOrRejectRequest(data));
+    handleUserRemoval(currentRejectUserId); // Remove user from the list after rejection
+  };
   const handleLogout = (e)=>{
     e.preventDefault();
     dispatch(LogoutUser());
@@ -130,6 +143,13 @@ const KYCRequest = () => {
         </button>
       </div>
       </div>
+      <RejectionOverlay
+        isOpen={isOverlayOpen}
+        onClose={() => setIsOverlayOpen(false)}
+        onSubmit={handleSubmitRejection} // Pass the rejection submission handler
+        userId={currentRejectUserId} // Pass the userId to RejectionOverlay
+        usersId={currentRejectUsersId}
+      />
      </div>
   );
 };
