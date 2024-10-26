@@ -46,6 +46,7 @@ let pool;
 exports.userKyc = asyncHandler(async (req, res,next) => {
     const {userId}=req
     const { fullName, email, phoneNumber, aadharNumber,bankNumber,IFSCCode } = req.body;
+    
     const filteredBody = filterObj(req.body, "fullName", "email", "phoneNumber", "aadharNumber","bankNumber","IFSCCode");
 
     // Validate phone number and Aadhar number
@@ -86,7 +87,7 @@ exports.userKyc = asyncHandler(async (req, res,next) => {
 
         // Insert data into user_kyc_details table
        const kycUser= await pool.query(
-            "INSERT INTO user_kyc_details (name, email, phone_number, aadhar_number,user_id,bank_account_number,IFSC_code) VALUES ($1, $2, $3, $4,$5,$6,$7) RETURNING *",
+            "INSERT INTO user_kyc_details (name, email, phone_number, aadhar_number,bank_account_number,ifsc_code,user_id) VALUES ($1, $2, $3, $4,$5,$6,$7) RETURNING *",
             [filteredBody.fullName, filteredBody.email, filteredBody.phoneNumber, filteredBody.aadharNumber,filteredBody.bankNumber,filteredBody.IFSCCode,userId]
         );         
         
@@ -145,7 +146,7 @@ exports.updateKyc=asyncHandler(async(req,res)=>{
     }
 
     try {
-        const updateKyc=await pool.query("UPDATE user_kyc_details SET (name,phone_number,aadhar_number,bank_account_number,IFSC_code,is_verified,message) VALUES() WHERE user_id = $6",[filteredBody.fullName,filteredBody.phoneNumber,filteredBody.aadharNumber,filteredBody.bankNumber,filteredBody.IFSCCode,'pending',null,userId])
+        const updateKyc=await pool.query("UPDATE user_kyc_details SET name = $1, phone_number = $2, aadhar_number = $3, bank_account_number = $4, ifsc_code = $5, is_verified = $6, message = $7 WHERE user_id = $8",[filteredBody.fullName,filteredBody.phoneNumber,filteredBody.aadharNumber,filteredBody.bankNumber,filteredBody.IFSCCode,'pending',null,userId])
         const updateUser=await pool.query("UPDATE users SET is_verified = $1 WHERE id = $2",['pending',userId])
 
         const user = await pool.query("Select * from users where id=$1",[userId])
