@@ -1,80 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 
 const Loan = () => {
-  const [amount, setAmount] = useState('');
-  const [duration, setDuration] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const loansPerPage = 8;
+  const [loans, setLoans] = useState([]); 
 
-  const handleSearch = async () => {
-    setSearchResults([
-      { id: 1, name: 'Rishabh Raj',  rate: '5.0%' },
-      { id: 2, name: 'Rishav Raj',  rate: '3.5%' }
-    ]);
-  };
+  useEffect(() => {
+    const fetchLoans = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/investments/getloan');
+        const result = await response.json();
 
-  const handleRequest = (lenderId) => {
-    console.log(`Request sent to lender with ID: ${lenderId}`);
+        if (result.status === "success" && Array.isArray(result.data)) {
+          setLoans(result.data);
+        } else {
+          console.error('Unexpected data format:', result);
+        }
+      } catch (error) {
+        console.error('Error fetching loans:', error);
+      }
+    };
+
+    fetchLoans();
+  }, []);
+
+  // Pagination logic
+  const lastIndex = currentPage * loansPerPage;
+  const firstIndex = lastIndex - loansPerPage;
+  const currentLoans = loans.slice(firstIndex, lastIndex);
+  const totalPages = Math.ceil(loans.length / loansPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
     <div className="flex h-screen overflow-hidden">
-          <div className="z-index-50 ">
-          
-          <Sidebar />
-        </div>
-    <div className="flex flex-1 flex-col items-center justify-center min-h-screen bg-gradient-to-r from-gray-50 to-gray-200 p-6">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">Loan Application</h1>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">Loan Amount</label>
-          <input
-            type="number"
-            placeholder="Enter loan amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="p-3 border border-gray-300 rounded-lg w-full"
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">Duration</label>
-          <input
-            type="text"
-            placeholder="Enter duration (e.g., 12 months)"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            className="p-3 border border-gray-300 rounded-lg w-full"
-          />
-        </div>
-        <button
-          onClick={handleSearch}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md w-full mb-6 hover:bg-blue-700 transition"
-        >
-          Search
-        </button>
-        <div>
-          {searchResults.length > 0 && (
-            <div className="space-y-4">
-              {searchResults.map((result) => (
-                <div key={result.id} className="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-800 mb-2">{result.name}</h2>
-                    <p className="text-gray-600 mb-2">{result.details}</p>
-                    <p className="text-gray-700 font-bold">Interest Rate: {result.rate}</p>
-                  </div>
-                  <button
-                    onClick={() => handleRequest(result.id)}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-                  >
-                    Send Request
-                  </button>
-                </div>
-              ))}
+      <div className="z-index-50">
+        <Sidebar />
+      </div>
+      <div className="flex flex-col flex-1 max-w-8xl mx-auto p-4 overflow-scroll overflow-x-hidden">
+        <h1 className="text-2xl font-bold mb-6 text-center">Live Loans</h1>
+        <div className="grid grid-cols-1 gap-4">
+          {currentLoans.map((loan, index) => (
+            <div key={index} className="border p-4 rounded-lg flex justify-between items-center">
+              <div>
+                <p><strong>Amount:</strong> {loan.amount}</p>
+                <p><strong>Duration:</strong> {loan.duration}</p>
+              </div>
+              <div>
+                <p><strong>Interest Rate:</strong> {loan.interest_rate}</p>
+              </div>
+              <div className="space-2 gap-2 flex flex-col">
+                <button className="bg-green-500 text-white px-4 py-2 rounded-full">Accept</button>
+                {/* <button className="bg-red-500 text-white px-4 py-2 rounded-full">Reject</button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-full">View</button> */}
+              </div>
             </div>
-          )}
+          ))}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-end mt-6 space-x-2">
+          <button
+            className={`px-4 py-2 rounded-full cursor-pointer ${currentPage === 1 ? 'bg-gray-300' : 'bg-slate-800 text-white'}`}
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Previous
+          </button>
+
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              className={`px-4 py-2 rounded-full cursor-pointer ${currentPage === index + 1 ? 'bg-amber-500 text-white' : 'bg-gray-300'}`}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
+
+          <button
+            className={`px-4 py-2 rounded-full cursor-pointer ${currentPage === totalPages ? 'bg-gray-300' : 'bg-green-600 text-white'}`}
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </button>
         </div>
       </div>
-    </div>
     </div>
   );
 };
