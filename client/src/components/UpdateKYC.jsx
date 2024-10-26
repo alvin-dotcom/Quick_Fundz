@@ -1,30 +1,32 @@
 import { useState } from 'react';
 //import { supabase } from '../supabaseClient';
-import { UserKyc } from '../redux/slices/auth';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { rejectedkyc} from '../redux/slices/auth';
 
-const KYC = () => {
+const UpdateKYC = () => {
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+  //const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [aadharNumber, setAadharNumber] = useState('');
   const [bankNumber, setBankNumber] = useState('');
   const [IFSCCode, setIFSCNumber] = useState('');
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
-
+  const {user_id}=useSelector((state)=>state.auth);
+console.log(user_id)
   const data={
     fullName: fullName,
-    email:email,
+    //email:email,
     phoneNumber:phoneNumber,
     aadharNumber:aadharNumber,
+    userId:user_id,
     bankNumber:bankNumber,
     IFSCCode:IFSCCode,
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    dispatch(UserKyc(data))
+    dispatch(rejectedkyc(data))
   };
 
   return (
@@ -47,16 +49,6 @@ const KYC = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
             <input
               type="tel"
@@ -69,7 +61,7 @@ const KYC = () => {
           <div className="mb-6">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Aadhar Number</label>
             <input
-              type="number"
+              type="text"
               value={aadharNumber}
               onChange={(e) => setAadharNumber(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -108,4 +100,4 @@ const KYC = () => {
   );
 };
 
-export default KYC;
+export default UpdateKYC;
