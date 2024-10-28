@@ -9,9 +9,9 @@ app.get('/',(req,res)=>{
 
 connectPostgresDB()
     .then((pool) => {
-        app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on http://139.84.209.255:${PORT}`);
-});
+        app.listen(process.env.PORT || 8000, () => {
+            console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
+        });
     })
     .catch((err) => {
         console.log("PostgreSQL connection failed !!!", err);
