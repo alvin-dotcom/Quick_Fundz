@@ -6,5 +6,4 @@ router.post('/kycEntry', authenticate,kycController.userKyc);
 router.post('/verifiedKyc',kycController.verifiedUser)
 router.post('/updatekyc',kycController.updateKyc)
 
-
 module.exports = router;
