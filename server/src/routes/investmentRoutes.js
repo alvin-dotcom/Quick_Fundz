@@ -1,10 +1,10 @@
 const express = require('express');
-const { createInvestment } = require('../controller/investmentController');
-const { getAllInvestments } = require('../controller/investmentController');
+const investmentController = require('../controller/investmentController')
+const authenticate = require('../middleware/authenticate.middleware')
 const router = express.Router();
 
-router.post('/invest', createInvestment);
-router.get("/getloan", getAllInvestments);
+router.post('/invest', authenticate,investmentController.createInvestment);
+router.get("/moneyLender",authenticate,investmentController.getAllInvestments);
 
 
 module.exports = router;
