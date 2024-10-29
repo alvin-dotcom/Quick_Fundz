@@ -10,7 +10,6 @@ const KycDetails = () => {
   const usersPerPage = 8;
   const navigate = useNavigate();
 
-  // Fetch KYC data directly from the server
   useEffect(() => {
     const fetchKycDetails = async () => {
       try {
@@ -26,47 +25,57 @@ const KycDetails = () => {
     fetchKycDetails();
   }, []);
 
-  // Pagination logic
+  const deleteUser = async (userId) => {
+    try {
+      await axios.delete(`http://localhost:3001/admin/deleteUser/${userId}`);
+      setAllRequest(allRequest.filter((user) => user.user_id !== userId));
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
   const lastIndex = currentPage * usersPerPage;
   const firstIndex = lastIndex - usersPerPage;
   const currentUsers = allRequest.slice(firstIndex, lastIndex);
   const totalPages = Math.ceil(allRequest.length / usersPerPage);
-
-  // Handle page change
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-gray-100">
       <Sidebar />
 
-      <div className="flex flex-col flex-1 max-w-8xl mx-auto p-4 overflow-scroll overflow-x-hidden">
-        <h1 className="text-2xl font-bold mb-6">KYC Details</h1>
+      <div className="flex flex-col flex-1 max-w-8xl mx-auto p-4 overflow-auto">
+        <h1 className="text-2xl font-bold mb-6 text-center md:text-left">KYC Details</h1>
 
         {loading ? (
-          <p>Loading...</p>
+          <p className="text-center">Loading...</p>
         ) : (
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {currentUsers.map((user) => (
-              <div key={user.user_id} className="border p-4 rounded-lg flex justify-between items-center">
-                <div>
-                  <p><strong>Name:</strong> {user.name}</p>
-                  <p><strong>Email:</strong> {user.email}</p>
+              <div key={user.user_id} className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between">
+                <div className="mb-4">
+                  <p className="text-gray-700"><strong>Name:</strong> {user.name}</p>
+                  <p className="text-gray-700"><strong>Email:</strong> {user.email}</p>
+                  <p className="text-gray-700"><strong>Phone:</strong> {user.phone_number}</p>
+                  <p className="text-gray-700"><strong>User ID:</strong> {user.user_id}</p>
+                  <p className="text-gray-700"><strong>Verified:</strong> {user.is_verified ? 'Yes' : 'No'}</p>
+                  <p className="text-gray-700"><strong>Bank Account:</strong> {user.bank_account_number}</p>
+                  <p className="text-gray-700"><strong>IFSC Code:</strong> {user.ifsc_code}</p>
                 </div>
-                <div>
-                  <p><strong>Phone:</strong> {user.phone_number}</p>
-                  <p><strong>Aadhar Number:</strong> {user.aadhar_number}</p>
-                </div>
-                <div className="space-2 gap-2 flex flex-col">
-                  <button className="bg-green-500 text-white px-4 py-2 rounded-full">Edit</button>
-                </div>
+                <button
+                  onClick={() => deleteUser(user.user_id)}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg transition-all hover:bg-red-600 focus:outline-none"
+                >
+                  Delete User
+                </button>
               </div>
             ))}
           </div>
         )}
 
-        <div className="flex justify-end mt-6 space-x-2">
+        <div className="flex justify-center mt-6 space-x-2">
           <button
-            className={`px-4 py-2 rounded-full cursor-pointer ${currentPage === 1 ? 'bg-gray-300' : 'bg-slate-800 text-white'}`}
+            className={`px-4 py-2 rounded-full ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-slate-800 text-white'}`}
             disabled={currentPage === 1}
             onClick={() => handlePageChange(currentPage - 1)}
           >
@@ -76,7 +85,7 @@ const KycDetails = () => {
           {Array.from({ length: totalPages }, (_, index) => (
             <button
               key={index + 1}
-              className={`px-4 py-2 rounded-full cursor-pointer ${currentPage === index + 1 ? 'bg-amber-500 text-white' : 'bg-gray-300'}`}
+              className={`px-4 py-2 rounded-full ${currentPage === index + 1 ? 'bg-amber-500 text-white' : 'bg-gray-300'}`}
               onClick={() => handlePageChange(index + 1)}
             >
               {index + 1}
@@ -84,7 +93,7 @@ const KycDetails = () => {
           ))}
 
           <button
-            className={`px-4 py-2 rounded-full cursor-pointer ${currentPage === totalPages ? 'bg-gray-300' : 'bg-green-600 text-white'}`}
+            className={`px-4 py-2 rounded-full ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-600 text-white'}`}
             disabled={currentPage === totalPages}
             onClick={() => handlePageChange(currentPage + 1)}
           >

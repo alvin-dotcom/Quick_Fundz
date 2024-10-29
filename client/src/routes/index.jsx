@@ -19,6 +19,7 @@ import KYCRequestPage from "../pages/dashboard/KYCRequestPage";
 import LoanRequestPage from "../pages/dashboard/LoanRequestPage";
 import NegotiateLoanPage from "../pages/dashboard/NegotiateLoanPage";
 import KycStatus from "../pages/dashboard/KYCStatusPage"
+import KycDetails from "../pages/dashboard/KycDetailsPage";
 
 export default function Router(){
     return useRoutes([
@@ -41,6 +42,7 @@ export default function Router(){
                 {element: <Navigate to="/admin/menu" replace/>,index:true},
                 {path:'/admin/menu', element:<Menu/>},
                 {path:'/admin/kycRequest',element:<KYCRequestPage/>},
+                {path:'/admin/kycdetails',element:<KycDetails/>},
                 
                 {path:'404',element:<Page404/>},
                 { path: "*", element: <Navigate to="/404" replace /> }

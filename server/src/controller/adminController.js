@@ -29,3 +29,30 @@ exports.confirm_OR_Reject_user=asyncHandler(async(req,res)=>{
         console.log(error);
     }
 })
+
+exports.getAllKycDetails = async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT user_id, name, email, phone_number, aadhar_number, is_verified, bank_account_number, ifsc_code 
+         FROM user_kyc_details`
+      );
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Error fetching KYC details:', error);
+      res.status(500).json({ message: 'Error fetching KYC details' });
+    }
+  };
+
+  exports.deleteUser = async (req, res) => {
+    const userId = req.params.id;
+    try {
+      const result = await pool.query('DELETE FROM user_kyc_details WHERE user_id = $1', [userId]);
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      res.status(500).json({ message: 'Error deleting user' });
+    }
+  };

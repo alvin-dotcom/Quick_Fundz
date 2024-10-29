@@ -41,6 +41,12 @@ const Sidebar = () => {
   ]:Menus = [
     // { title: "Overview", src: "Overview", svg: overview  , href: 'overview'},
     { title: "KYC_Request", src: "Overview", svg: "user"  , href: '/admin/kycRequest'},
+    {
+      title: "Kyc_Details",
+      src: "HumanResource",
+      svg: "human",
+      href: "/admin/KycDetails",
+    },
     
     //{ title: "Payment", src: "Finance", svg: "finance" , href: 'payment'},
     /*{ title: "Placements", src: "Placements", svg: placements , href: 'placements'},
