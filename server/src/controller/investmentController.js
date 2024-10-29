@@ -8,13 +8,17 @@ let pool;
 
 
 exports.createInvestment = asyncHandler(async (req, res,next ) => {
+    
     const { userId } = req; 
     const { amount, duration, interestRate } = req.body;
-
     try {
+        const user = await pool.query("Select * from users where id=$1",[userId])
+        const kycUser = await pool.query("Select * from user_kyc_details where user_id=$1",[userId])
+        const name = kycUser.rows[0].name;
+        const email = user.rows[0].email;
         const newInvestment = await pool.query(
-            "INSERT INTO investments (amount, duration, interest_rate, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
-            [amount, duration, interestRate, userId]
+            "INSERT INTO investor_details (name,email,amount, duration, rate_of_interest, user_id) VALUES ($1, $2, $3, $4 , $5 , $6) RETURNING *",
+            [name , email,amount, duration, interestRate, userId]
         );
 
         res.status(201).json({
@@ -33,9 +37,10 @@ exports.createInvestment = asyncHandler(async (req, res,next ) => {
 });
 
 exports.getAllInvestments = asyncHandler(async (req, res) => {
+    const {userId} = req;
     try {
         const investments = await pool.query(
-            "SELECT amount, duration, interest_rate, user_id FROM investments"
+            "SELECT * FROM investor_details WHERE invest_status = $1 AND user_id != $2",['provider',userId] 
         );
         res.status(200).json({
             status: "success",
