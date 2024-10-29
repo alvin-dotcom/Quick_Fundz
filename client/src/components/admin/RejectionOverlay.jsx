@@ -6,6 +6,7 @@ const RejectionOverlay = ({ isOpen, onClose, onSubmit}) => {
   if (!isOpen) return null;
 
   const handleSubmit = () => {
+
     onSubmit(message);
     onClose();
   };
