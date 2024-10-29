@@ -13,92 +13,92 @@ const KYC = () => {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
-  const data={
-    fullName: fullName,
-    email:email,
-    phoneNumber:phoneNumber,
-    aadharNumber:aadharNumber,
-    bankNumber:bankNumber,
-    IFSCCode:IFSCCode,
-  }
+  const data = {
+    fullName,
+    email,
+    phoneNumber,
+    aadharNumber,
+    bankNumber,
+    IFSCCode,
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    dispatch(UserKyc(data))
+    dispatch(UserKyc(data));
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-blue-300 p-4">
-      <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg max-w-sm w-full sm:max-w-md lg:max-w-lg mx-auto">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Submit Your KYC Details</h1>
-        <p className="text-gray-600 mb-6 text-center">
-          <span className="font-semibold">Know Your Customer (KYC)</span> is a critical process for verifying your identity and ensuring the security and compliance of our platform. By providing your KYC details, you help us maintain a safe environment for all users and comply with regulatory standards.
+    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50 p-2">
+      <div className="bg-white p-4 rounded-xl shadow-lg w-full sm:max-w-md lg:max-w-xl mx-auto">
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-3">Submit Your KYC Details</h1>
+        <p className="text-gray-600 mb-3 text-center text-sm">
+          <span className="font-semibold">Know Your Customer (KYC)</span> is a critical process for verifying your identity and ensuring security.
         </p>
-        <form onSubmit={handleSubmit}>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          {error && <p className="text-red-500 mb-2">{error}</p>}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
             <input
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Phone Number</label>
             <input
               type="tel"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Aadhar Number</label>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Aadhar Number</label>
             <input
               type="number"
               value={aadharNumber}
               onChange={(e) => setAadharNumber(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Bank Account Number</label>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Bank Account Number</label>
             <input
               type="number"
               value={bankNumber}
               onChange={(e) => setBankNumber(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">IFSC Code</label>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">IFSC Code</label>
             <input
               type="text"
               value={IFSCCode}
               onChange={(e) => setIFSCNumber(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded-lg w-full font-semibold hover:bg-blue-700 transition"
+            className="bg-blue-500 text-white py-2 px-4 rounded-lg w-full font-semibold hover:bg-blue-600 transition"
           >
             Submit
           </button>

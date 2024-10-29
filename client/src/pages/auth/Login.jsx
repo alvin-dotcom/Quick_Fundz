@@ -1,7 +1,6 @@
 import { useState } from 'react';
-//import axios from 'axios';
-import {useDispatch} from 'react-redux'
-import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
 import { LoginUser } from '../../redux/slices/auth';
 
 const Login = () => {
@@ -18,8 +17,9 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try { 
-      dispatch(LoginUser(formData))
+    try {
+      dispatch(LoginUser(formData));
+      navigate('/dashboard');
     } catch (err) {
       console.error(err);
       alert('User Does Not Exist');
@@ -57,6 +57,12 @@ const Login = () => {
           </div>
           <button type="submit" className="w-full bg-green-500 text-white py-2 rounded-lg">Login</button>
         </form>
+        <p className="text-center text-sm text-gray-500 mt-4">
+          Don't have an account?{' '}
+          <Link to="/auth/signup" className="text-green-500 hover:underline">
+            Register
+          </Link>
+        </p>
       </div>
     </div>
   );

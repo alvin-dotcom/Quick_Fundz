@@ -8,148 +8,130 @@ import RejectionOverlay from './RejectionOverlay';
 
 const KYCRequest = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [allRequest , setAllRequest] = useState(null);
-  const [isOverlayOpen, setIsOverlayOpen] = useState(false); 
+  const [allRequest, setAllRequest] = useState(null);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const [currentRejectUserId, setCurrentRejectUserId] = useState(null);
   const [currentRejectUsersId, setCurrentRejectUsersId] = useState(null);
   const usersPerPage = 8;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  useEffect(()=>{
+
+  useEffect(() => {
     const fetchKycRequests = async () => {
       try {
-        const user = await dispatch(showKycRequest()); // Await the response from dispatch
-       setAllRequest(user.listOfRequest); // Log the result, which should be the response data
+        const user = await dispatch(showKycRequest());
+        setAllRequest(user.listOfRequest);
       } catch (error) {
         console.error("Error fetching KYC requests: ", error);
       }
     };
 
     fetchKycRequests();
-  },[dispatch])
-  // Sample user data for display
-  /* const users = Array(41).fill({
-    name: 'John Doe',
-    aadharNo: 'XXXX-XXXX-XXXX',
-    phone: '1234567890',
-    address: '123 Main St, City, State',
-  }); */
+  }, [dispatch]);
 
-  // Pagination logic
   const lastIndex = currentPage * usersPerPage;
   const firstIndex = lastIndex - usersPerPage;
   const currentUsers = allRequest ? allRequest.slice(firstIndex, lastIndex) : [];
   const totalPages = allRequest ? Math.ceil(allRequest.length / usersPerPage) : 0;
-  
-  // Handle page change
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-  const handleUserRemoval = (userId)=>{
-    const updatedRequestList=allRequest.filter(user=>user.id !==userId);
+
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleUserRemoval = (userId) => {
+    const updatedRequestList = allRequest.filter((user) => user.id !== userId);
     setAllRequest(updatedRequestList);
-  }
-console.log(allRequest)
-  const handleConfirm=(userId,usersId,status)=>{
-    const data={
-      userId:userId,
-      usersId:usersId,
-      status:status
-    }
-    dispatch(confirmOrRejectRequest(data))
+  };
+
+  const handleConfirm = (userId, usersId, status) => {
+    const data = { userId, usersId, status };
+    dispatch(confirmOrRejectRequest(data));
     handleUserRemoval(userId);
-  }
+  };
 
   const handleReject = (userId, usersId) => {
-    setCurrentRejectUserId(userId); // Store userId in state
-    setCurrentRejectUsersId(usersId); // Store usersId in state
-    setIsOverlayOpen(true); // Open overlay
+    setCurrentRejectUserId(userId);
+    setCurrentRejectUsersId(usersId);
+    setIsOverlayOpen(true);
   };
 
-  // Handle rejection submission
   const handleSubmitRejection = (message) => {
     const data = {
-      userId: currentRejectUserId, // Use the stored userId
-      usersId: currentRejectUsersId, // Use the stored usersId
+      userId: currentRejectUserId,
+      usersId: currentRejectUsersId,
       status: 'Not verified',
-      message:message
+      message
     };
     dispatch(confirmOrRejectRequest(data));
-    handleUserRemoval(currentRejectUserId); // Remove user from the list after rejection
+    handleUserRemoval(currentRejectUserId);
   };
-  const handleLogout = (e)=>{
+
+  const handleLogout = (e) => {
     e.preventDefault();
     dispatch(LogoutUser());
     navigate("/auth/home");
-  }
+  };
 
   return (
-    <div className="flex h-screen overflow-hidden">
-    <div className="z-index-50 ">
-    
-    <Sidebar />
-  </div>
-    <div className=" flex flex-col flex-1 max-w-8xl mx-auto p-4 overflow-scroll overflow-x-hidden">
-      {/* <button type='submit' onClick={handleLogout}>Logout</button> */}
-      <h1 className="text-2xl font-bold mb-6">KYC Requests</h1>
-      <div className="grid grid-cols-1 gap-4">
-        {currentUsers.map((user, index) => (
-          <div key={index} className="border p-4 rounded-lg flex justify-between items-center">
-            <div>
-              <p><strong>Name:</strong> {user.name}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-            </div>
-            <div>
-            <p><strong>Phone:</strong> {user.phone_number}</p>
-            <p><strong>Aadhar Number:</strong> {user.aadhar_number}</p>
-            </div>
-            <div className="space-2 gap-2 flex flex-col ">
-              <button className="bg-green-500 text-white px-4 py-2 rounded-full" value={"confirm"} onClick={()=>handleConfirm(user.id,user.user_id,'confirm') }>Confirm</button>
-              <button className="bg-red-500 text-white px-4 py-2 rounded-full" value={"Not verified"} onClick={()=>handleReject(user.id,user.user_id,'Not verified')}>Reject</button>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-full">View</button>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="flex h-screen bg-gray-100">
+      <Sidebar />
 
-      {/* Pagination */}
-      
-      <div className="flex justify-end mt-6 space-x-2 ">
-        <button
-          className={`px-4 py-2 rounded-full cursor-pointer ${currentPage === 1 ? 'bg-gray-300' : 'bg-slate-800 text-white'}`}
-          disabled={currentPage === 1}
-          onClick={() => handlePageChange(currentPage - 1)}
-        >
-          Previous
-        </button>
+      <div className="flex-1 flex flex-col max-w-8xl mx-auto p-4 overflow-hidden">
+        <h1 className="text-3xl font-bold text-center mb-8">KYC Requests</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {currentUsers.map((user, index) => (
+            <div key={index} className="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between">
+              <div>
+                <p className="text-lg font-semibold"><strong>Name:</strong> {user.name}</p>
+                <p className="text-sm text-gray-600"><strong>Email:</strong> {user.email}</p>
+                <p className="text-sm text-gray-600"><strong>Phone:</strong> {user.phone_number}</p>
+                <p className="text-sm text-gray-600"><strong>Aadhar Number:</strong> {user.aadhar_number}</p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                <button className="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition" onClick={() => handleConfirm(user.id, user.user_id, 'confirm')}>Confirm</button>
+                <button className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition" onClick={() => handleReject(user.id, user.user_id)}>Reject</button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">View</button>
+              </div>
+            </div>
+          ))}
+        </div>
 
-        {Array.from({ length: totalPages }, (_, index) => (
+        {/* Pagination */}
+        <div className="flex justify-center mt-8 space-x-2">
           <button
-            key={index + 1}
-            className={`px-4 py-2 rounded-full cursor-pointer ${currentPage === index + 1 ? 'bg-amber-500 text-white' : 'bg-gray-300'}`}
-            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 rounded-full ${currentPage === 1 ? 'bg-gray-300' : 'bg-slate-800 text-white hover:bg-slate-900'}`}
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
           >
-            {index + 1}
+            Previous
           </button>
-        ))}
 
-        <button
-          className={`px-4 py-2 rounded-full cursor-pointer ${currentPage === totalPages ? 'bg-gray-300' : 'bg-green-600 text-white'}`}
-          disabled={currentPage === totalPages}
-          onClick={() => handlePageChange(currentPage + 1)}
-        >
-          Next
-        </button>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              className={`px-4 py-2 rounded-full ${currentPage === index + 1 ? 'bg-amber-500 text-white' : 'bg-gray-300 hover:bg-gray-400'}`}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
+
+          <button
+            className={`px-4 py-2 rounded-full ${currentPage === totalPages ? 'bg-gray-300' : 'bg-green-600 text-white hover:bg-green-700'}`}
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
       </div>
-      </div>
+
       <RejectionOverlay
         isOpen={isOverlayOpen}
         onClose={() => setIsOverlayOpen(false)}
-        onSubmit={handleSubmitRejection} // Pass the rejection submission handler
-        userId={currentRejectUserId} // Pass the userId to RejectionOverlay
+        onSubmit={handleSubmitRejection}
+        userId={currentRejectUserId}
         usersId={currentRejectUsersId}
       />
-     </div>
+    </div>
   );
 };
 

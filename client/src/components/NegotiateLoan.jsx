@@ -68,7 +68,7 @@ const NegotiateLoan = () => {
         <Sidebar />
       </div>
       <div className="flex flex-col flex-1 max-w-8xl mx-auto p-4 overflow-scroll overflow-x-hidden">
-        <h1 className="text-2xl font-bold mb-6 text-center">Loan Requests</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">Loan Negotiation</h1>
         <div className="grid grid-cols-1 gap-4">
           {currentUsers?.map((user, index) => (
             <div key={index} className="border p-4 rounded-lg flex justify-between items-center">
