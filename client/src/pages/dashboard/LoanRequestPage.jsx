@@ -1,5 +1,5 @@
 import React from 'react'
-import LoanRequest from '../../components/admin/LoanRequest'
+import LoanRequest from '../../components/LoanRequest'
 
 function LoanRequestPage() {
   return (
