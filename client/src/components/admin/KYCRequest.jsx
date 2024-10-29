@@ -49,7 +49,7 @@ const KYCRequest = () => {
     const updatedRequestList=allRequest.filter(user=>user.id !==userId);
     setAllRequest(updatedRequestList);
   }
-
+console.log(allRequest)
   const handleConfirm=(userId,usersId,status)=>{
     const data={
       userId:userId,
@@ -68,7 +68,6 @@ const KYCRequest = () => {
 
   // Handle rejection submission
   const handleSubmitRejection = (message) => {
-    console.log(message);
     const data = {
       userId: currentRejectUserId, // Use the stored userId
       usersId: currentRejectUsersId, // Use the stored usersId
