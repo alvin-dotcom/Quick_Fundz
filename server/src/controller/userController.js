@@ -78,11 +78,15 @@ exports.loginUser= asyncHandler(async(req,res)=>{
         process.env.JWT_SECRET,
         { expiresIn: "360000h" }
       );
+      const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+    }
   const kycMessage = kycUser.rows[0]?.message;
   const role = user.rows[0].role;
   const user_id=user.rows[0].id;
   const verificationStatus=user.rows[0].is_verified;
-      res.json({ token, role , user_id,verificationStatus,kycMessage});
+      res.cookie("token",token,options).status(201).json({ token, role , user_id,verificationStatus,kycMessage});
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Server error" });
