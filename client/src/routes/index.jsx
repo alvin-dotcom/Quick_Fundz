@@ -17,10 +17,8 @@ import Payment from "../pages/dashboard/PaymentPage"
 import Page404 from "../pages/Page404";
 import KYCRequestPage from "../pages/dashboard/KYCRequestPage";
 import LoanRequestPage from "../pages/dashboard/LoanRequestPage";
-import KycStatus from "../pages/dashboard/KYCStatusPage";
-import ActiveUsers from "../pages/dashboard/ActiveUsersPage";
-import KycDetails from "../pages/dashboard/KycDetailsPage";
-
+import NegotiateLoanPage from "../pages/dashboard/NegotiateLoanPage";
+import KycStatus from "../pages/dashboard/KYCStatusPage"
 
 export default function Router(){
     return useRoutes([
@@ -43,9 +41,7 @@ export default function Router(){
                 {element: <Navigate to="/admin/menu" replace/>,index:true},
                 {path:'/admin/menu', element:<Menu/>},
                 {path:'/admin/kycRequest',element:<KYCRequestPage/>},
-                {path:'/admin/loanRequest',element:<LoanRequestPage/>},
-                {path:'/admin/activeusers',element:<ActiveUsers/>},
-                {path:'/admin/kycdetails',element:<KycDetails/>},
+                
                 {path:'404',element:<Page404/>},
                 { path: "*", element: <Navigate to="/404" replace /> }
             ]
@@ -60,6 +56,8 @@ export default function Router(){
                 {path:'invest',element:<Invest/>},
                 {path:'loan',element:<Loan/>},
                 {path:'payment',element:<Payment/>},
+                {path:'loanRequest',element:<LoanRequestPage/>},
+                {path:'negotiate',element:<NegotiateLoanPage/>},
                 {path:'404',element:<Page404/>},
                 { path: "*", element: <Navigate to="/404" replace /> }
             ]
