@@ -12,6 +12,7 @@ const initialState = {
   user_id: null,
   verificationStatus:'pending',
   kycMessage: null,
+  loan_status:'processing',
 };
 
 const slice = createSlice({
@@ -30,6 +31,7 @@ const slice = createSlice({
       state.user_id = action.payload.user_id;
       state.email = action.payload.email;
       state.kycMessage = action.payload.kycMessage;
+      
     },
     signOut(state, action) {
       state.isLoggedIn = false;
@@ -45,7 +47,10 @@ const slice = createSlice({
       state.isLoggedIn = action.payload.isLoggedIn;
       state.role=action.payload.role;
       state.verificationStatus = action.payload.verificationStatus;
-    }
+    },
+    /* verifyLoan(state, action){
+      state.loan_status=action.payload.loan_status;
+    } */
   },
 });
 
@@ -53,12 +58,12 @@ const slice = createSlice({
 export default slice.reducer;
 
 export function LoginUser(formValues) {
+  console.log(formValues.email);
   return async (dispatch, getState) => {
     try {
-      const response = await axios.post("auth/login", formValues);
+      const response = await axios.post("auth/login", formValues,{withCredentials: true});
 
       const { token, role, user_id, message, verificationStatus,kycMessage} = response.data;
-      console.log(response.data)
       if(verificationStatus === 'verified'){
         dispatch(
           slice.actions.logIn({
@@ -215,6 +220,128 @@ export function rejectedkyc(formValues){
     } catch (error) {
       toast.error(error.message)
 
+    }
+  }
+}
+
+export function investmentEntry(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.post(
+        "investments/invest",formValues,{withCredentials:true}
+      );
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function allInvestments(){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.get('investments/moneyLender',{withCredentials:true})
+      return response.data;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function loanRequest(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.post('loanRequest/loan',formValues,{withCredentials:true})
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function requestInvestor(formValues){
+  return async(dispatch,getState)=>{
+     
+      try {
+        const response = await axios.post('loanRequest/requestInvestor',formValues,{withCredentials:true})        
+  
+        return response.data;
+        
+      } catch (error) {
+        console.log(error)
+      }
+    
+  }
+}
+
+export function rejectedLoan(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.post('loanRequest/rejectLoan',formValues,{withCredentials:true})
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function approvedLoan(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.post('loanRequest/acceptLoan',formValues,{withCredentials:true})
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function investorNegotiate(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.post('loanRequest/lastNegotiate',formValues,{withCredirectials:true})
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function negotiateValue(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.get('negotiateRequest/allNegotiateAmount',{withCredentials:true})
+
+      return response.data;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function negotiationApprove(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.post('negotiateRequest/approveNegotiation',formValues,{withCredentials:true})
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function rejectNegotiation(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.post('negotiateRequest/negotiationReject',formValues,{withCredentials:true})
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function moneyPaid(formValues){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.post('loanRequest/paidStatus',formValues,{withCredentials:true})
+    } catch (error) {
+      console.log(error)
     }
   }
 }
