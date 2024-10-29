@@ -90,7 +90,7 @@ console.log(allRequest)
     <Sidebar />
   </div>
     <div className=" flex flex-col flex-1 max-w-8xl mx-auto p-4 overflow-scroll overflow-x-hidden">
-      <button type='submit' onClick={handleLogout}>Logout</button>
+      {/* <button type='submit' onClick={handleLogout}>Logout</button> */}
       <h1 className="text-2xl font-bold mb-6">KYC Requests</h1>
       <div className="grid grid-cols-1 gap-4">
         {currentUsers.map((user, index) => (
