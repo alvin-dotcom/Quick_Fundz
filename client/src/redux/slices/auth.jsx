@@ -345,3 +345,26 @@ export function moneyPaid(formValues){
     }
   }
 }
+
+export function activeUser(){
+  return async(dispatch,getState)=>{
+    try {
+      const response = await axios.get('admin/users');
+      return response.data;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function deleteCurrentUser(formValues){
+  return async()=>{
+    try {
+      const response = await axios.get(`admin/deleteUser/${formValues}`)
+      return response.data;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+}
