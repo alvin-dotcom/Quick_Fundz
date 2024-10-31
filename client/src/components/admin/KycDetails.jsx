@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import Sidebar from '../Sidebar';
+import { activeUser } from '../../redux/slices/auth';
+import { useDispatch } from 'react-redux';
 
 const KycDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [allRequest, setAllRequest] = useState([]);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   const usersPerPage = 8;
-  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchKycDetails = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/admin/users');
-        setAllRequest(response.data);
+       const kycUser=await dispatch(activeUser());
+        setAllRequest(kycUser);
       } catch (error) {
         console.error("Error fetching KYC details:", error);
       } finally {
@@ -24,6 +27,7 @@ const KycDetails = () => {
 
     fetchKycDetails();
   }, []);
+  console.log(allRequest)
 
   const deleteUser = async (userId) => {
     try {

@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../Sidebar';
-import axios from 'axios';
+import { activeUser ,deleteCurrentUser} from '../../redux/slices/auth';
+import { useDispatch } from 'react-redux';
 
 const ActiveUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
   const [users, setUsers] = useState([]);
+  const dispatch=useDispatch();
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const usersDetail=await dispatch(activeUser());
+        setUsers(usersDetail);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
     fetchUsers();
-  }, []);
+  }, [dispatch]);
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get('http://localhost:3001/admin/users');
-      setUsers(response.data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
+  
 
   const deleteUser = async (role) => {
-    console.log("Deleting user with username:", role);
     try {
-      const response = await axios.delete(`http://localhost:3001/admin/users/${role}`);
-      console.log("Response from delete:", response.data); 
+      dispatch(deleteCurrentUser(role)); 
       setUsers(users.filter(user => user.role !== role)); 
     } catch (error) {
       console.error("Error deleting user:", error); 
