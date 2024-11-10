@@ -21,6 +21,7 @@ const Sidebar = () => {
     Menus = [
       { title: "KYC Request", svg: "https://img.icons8.com/?size=100&id=7857&format=png&color=FFFFFF", href: "/admin/kycRequest" },
       { title: "KYC Details", svg: "https://img.icons8.com/?size=100&id=33843&format=png&color=FFFFFF", href: "/admin/KycDetails" },
+      { title: "Active Users", svg: "https://img.icons8.com/?size=100&id=33843&format=png&color=FFFFFF", href: "/admin/activeUsers" },
     ];
   }
 
@@ -41,7 +42,7 @@ const Sidebar = () => {
           <img src={dashicon} />
           <h1
             className={`text-white cursor-pointer hover:text-2xl origin-left font-medium text-xl duration-200 ${!open && "scale-0"}`}
-            onClick={() => { navigate('/branch') }}
+            onClick={() => {role ==='user' ? navigate('/admin/menu'):navigate('/menu') }}
           >
             Dashboard
           </h1>
