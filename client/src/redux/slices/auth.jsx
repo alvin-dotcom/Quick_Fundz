@@ -346,11 +346,36 @@ export function moneyPaid(formValues){
   }
 }
 
+export function kycUser(){
+  return async()=>{
+    try {
+      const response = await axios.get('admin/kycUsers');
+      return response.data;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function adminUpdateKyc_user(formValues){
+  console.log(formValues);
+  return async()=>{
+try {
+        const response = await axios.post('admin/adminUpdateKycUser',formValues,{withCredentials:true})
+  
+} catch (error) {
+  console.log(error)
+}    
+  }
+}
+
 export function activeUser(){
-  return async(dispatch,getState)=>{
+  return async()=>{
     try {
       const response = await axios.get('admin/users');
+      
       return response.data;
+
     } catch (error) {
       console.log(error)
     }
@@ -368,3 +393,35 @@ export function deleteCurrentUser(formValues){
   }
 
 }
+
+export function adminUpdateCurrent_user(formValues){
+  return async()=>{
+    try {
+      const response = await axios.post('admin/UpdateCurrent_user', formValues,{withCredentials:true});
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export function adminMessage(){
+  return async()=>{
+    try {
+      const response = await axios.get('admin/message',{withCredentials:true})
+
+      return response.data;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+/* export function deleteMessage(){
+  return async()=>{
+    try {
+      const response = await axios.get('admin/messageDelete',{withCredentials:true})
+    } catch (error) {
+      console.log(error)
+    }
+  }
+} */
