@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IoIosNotificationsOutline } from "react-icons/io";
 import Sidebar from './Sidebar';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { LogoutUser } from '../redux/slices/auth';
+import { adminMessage, LogoutUser } from '../redux/slices/auth';
 
 const Menu = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
+  const [showMessage, setShowMessage] = useState([]);
   const popupRef = useRef(null); 
 
   const handleLogout = (e) => {
@@ -17,18 +18,28 @@ const Menu = () => {
     navigate("/auth/home");
   };
 
+  
   const handleNotificationClick = () => {
-    setShowPopup((prev) => !prev);   };
+    setShowPopup((prev) => !prev);   
+    
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
         setShowPopup(false);
+       
       }
     };
+    const fetchMessage= async()=>{
+      const messages =await dispatch(adminMessage());
+      setShowMessage(messages)
+    }
+    fetchMessage();
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      
     };
   }, []);
 
@@ -43,12 +54,13 @@ const Menu = () => {
               className="flex items-center justify-center p-2 text-black hover:bg-gray-200 rounded-full"
             >
               <IoIosNotificationsOutline size={28} />
-              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">1</span>
+              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">{showMessage? '1':'0'}</span>
             </button>
-            {showPopup && (
+            {showPopup && (<>
               <div ref={popupRef} className="absolute top-12 right-0 w-64 p-4 bg-white border rounded shadow-lg z-50">
-                <p className="text-black">You have a new message from Admin.</p>
+                <p className="text-black">{showMessage}</p>
               </div>
+              </>
             )}
           </div>
           <button 
