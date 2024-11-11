@@ -11,7 +11,7 @@ router.use("/admin", admin);
 router.use("/investments", investment);
 router.use("/loanRequest",loan);
 router.use("/negotiateRequest",negotiation);
-router.use("/negotiateRequest",negotiation);
+//router.use("/negotiateRequest",negotiation);
 
 
 module.exports = router;
