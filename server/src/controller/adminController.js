@@ -33,8 +33,7 @@ exports.confirm_OR_Reject_user=asyncHandler(async(req,res)=>{
 exports.getAllKycDetails = async (req, res) => {
     try {
       const result = await pool.query(
-        `SELECT user_id, name, email, phone_number, aadhar_number, is_verified, bank_account_number, ifsc_code 
-         FROM user_kyc_details`
+        `SELECT * FROM user_kyc_details`
       );
       res.json(result.rows);
     } catch (error) {
@@ -43,16 +42,65 @@ exports.getAllKycDetails = async (req, res) => {
     }
   };
 
-  exports.deleteUser = async (req, res) => {
-    const userId = req.params.id;
-    try {
-      const result = await pool.query('DELETE FROM user_kyc_details WHERE user_id = $1', [userId]);
-      if (result.rowCount === 0) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      res.json({ message: 'User deleted successfully' });
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      res.status(500).json({ message: 'Error deleting user' });
+  exports.adminUpdateKycUser=asyncHandler(async(req,res)=>{
+    const {userId,userID} = req.body;
+try {
+      const updateKycUser= await pool.query('Update user_kyc_details set user_id = NULL where id=$1',[userId])
+      const updateUserKyc= await pool.query('Update users set kyc_usersuser_id=NULL where id=$1',[userID])
+} catch (error) {
+  console.log(error)
+}  })
+
+exports.getAllUsers=asyncHandler(async(req,res)=>{
+
+  try {
+    const allUser = await pool.query('Select * from users ')
+    res.status(200).json(allUser.rows)
+  } catch (error) {
+    console.error('Error fetching User details:', error);
+      res.status(500).json({ message: 'Error fetching User details' });
+  }
+});
+
+exports.adminUpdateUser=asyncHandler(async(req,res)=>{
+  const {userId,inputValue}=req.body;
+
+try {
+    const updateUser = await pool.query("Update users set message=$1 where id=$2",[inputValue,userId])
+  
+} catch (error) {
+  console.log(error)
+}})
+exports.deleteUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const result = await pool.query('DELETE FROM user_kyc_details WHERE user_id = $1', [userId]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'User not found' });
     }
-  };
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Error deleting user' });
+  }
+};
+
+exports.adminMessage=asyncHandler(async(req, res)=>{
+  const {userId} = req;
+  try {
+    const message = await pool.query('Select message from users where id=$1',[userId])
+
+    res.status(200).json(message.rows[0].message);
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+/* exports.adminMessageDelete=asyncHandler(async(req, res)=>{
+  const {userId} = req;
+  try {
+    const deleteMessage = await pool.query("Update users set message=NULL where id=$1",[userId])
+  } catch (error) {
+    console.log(error)
+  }
+}) */
