@@ -13,7 +13,7 @@ import UpdateKYC from "../pages/dashboard/UpdateKYCPage"
 import KYC from "../pages/dashboard/KYCPage"
 import Loan from "../pages/dashboard/LoanPage"
 import Menu from "../pages/dashboard/MenuPage"
-import Payment from "../pages/dashboard/PaymentPage"
+//import Payment from "../pages/dashboard/PaymentPage"
 import Page404 from "../pages/Page404";
 import KYCRequestPage from "../pages/dashboard/KYCRequestPage";
 import LoanRequestPage from "../pages/dashboard/LoanRequestPage";
@@ -60,7 +60,7 @@ export default function Router(){
                 {path:'menu',element:<Menu/>},
                 {path:'invest',element:<Invest/>},
                 {path:'loan',element:<Loan/>},
-                {path:'payment',element:<Payment/>},
+                //{path:'payment',element:<Payment/>},
                 {path:'loanRequest',element:<LoanRequestPage/>},
                 {path:'negotiate',element:<NegotiateLoanPage/>},
                 {path:'404',element:<Page404/>},
