@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
+import {load} from "@cashfreepayments/cashfree-js"
+import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
 import { approvedLoan, investorNegotiate, rejectedLoan, requestInvestor,moneyPaid } from '../redux/slices/auth';
 import NegotiateForm from './NegotiateForm'
@@ -76,13 +78,72 @@ const LoanRequest = () => {
     window.location.reload();
   };
 
-  const handlePay = (index) => {
-    const newPaidRequests = {
+  let cashfree;
+
+  let initializeSDK = async function(){
+    cashfree = await load({
+      mode:"sandbox",
+    })
+  }
+  initializeSDK()
+
+  const [orderId,setOrderId] = useState("")
+
+  const getSessionId = async()=>{
+    try {
+      let res = await axios.get("http://localhost:3001/payment") 
+   
+      if(res.data && res.data.payment_session_id){
+       console.log(res.data)
+       setOrderId(res.data.order_id)
+       return res.data.payment_session_id
+      }
+     } catch (error) {
+       console.log(error)
+     }
+  }
+  const verifyPayment= async(orderId,index)=>{
+    try {
+      let res=await axios.post("http://localhost:3001/verify",{
+        orderId:orderId
+      })
+      if(res && res.data){
+        const newPaidRequests = {
+          ...paidRequests,
+          [index]: true,
+        };
+        setPaidRequests(newPaidRequests);
+        localStorage.setItem('paidRequests', JSON.stringify(newPaidRequests));
+      }
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handlePay = async (index)=>{
+    
+    try {
+      let sessionId = await getSessionId();
+      let checkoutOptions={
+        paymentSessionId:sessionId,
+        redirectTarget:"_modal",
+      }
+  
+      cashfree.checkout(checkoutOptions).then((res)=>{
+        console.log("Payment initiate")
+        verifyPayment(orderId,index)
+      })
+    } catch (error) {
+      console.log(error);
+    }
+    /* const newPaidRequests = {
       ...paidRequests,
       [index]: true,
     };
     setPaidRequests(newPaidRequests);
-    localStorage.setItem('paidRequests', JSON.stringify(newPaidRequests));
+    localStorage.setItem('paidRequests', JSON.stringify(newPaidRequests)); */
+    
   };
   const handleNegotiate = (investor_email, investoruser_id, loan_amount, loan_duration, loan_rate_of_interest, loan_user_id, loan_id) => {
     setInvestor_email(investor_email);
@@ -159,7 +220,7 @@ const LoanRequest = () => {
                     <button className="bg-gray-400 text-white px-4 py-2 rounded-full cursor-not-allowed" onClick={()=>handlePaid(user.investor_id,"Paid")}>Paid</button>
                   ) : (
                     <>
-                      <button className="bg-blue-500 text-white px-4 py-2 rounded-full" onClick={() => handlePay(index)}>Pay</button>
+                      <button className="bg-blue-500 text-white px-4 py-2 rounded-full" onClick={()=>handlePay(index)}>Pay</button>
                       <p className="text-sm text-red-600">Pay within three days</p>
                     </>
                   )
