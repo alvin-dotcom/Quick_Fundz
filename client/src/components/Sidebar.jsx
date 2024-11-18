@@ -13,7 +13,7 @@ const Sidebar = () => {
     Menus = [
       { title: "Invest", svg: "https://img.icons8.com/?size=100&id=82688&format=png&color=FFFFFF", href: "invest" },
       { title: "Loan", svg: "https://img.icons8.com/?size=100&id=9bwh9eISXZAz&format=png&color=FFFFFF", href: "loan" },
-      { title: "Payment", svg: "https://img.icons8.com/?size=100&id=78231&format=png&color=FFFFFF", href: "payment" },
+     // { title: "Payment", svg: "https://img.icons8.com/?size=100&id=78231&format=png&color=FFFFFF", href: "payment" },
       { title: "Loan Request", svg: "https://img.icons8.com/?size=100&id=yAYeAE5xvjeu&format=png&color=FFFFFF", href: "loanRequest" },
       { title: "Loan Negotiate", svg: "https://img.icons8.com/?size=100&id=irl0UrqGW2li&format=png&color=FFFFFF", href: "negotiate" },
     ];
