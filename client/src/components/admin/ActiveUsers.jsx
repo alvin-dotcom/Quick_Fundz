@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, input } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip } from "@nextui-org/react";
 import { DeleteIcon } from "../BuildFunction/DeleteIcon";
 import { EditIcon } from "../BuildFunction/EditIcon";
 
 import Sidebar from '../Sidebar';
-import { activeUser, adminUpdateCurrent_user, adminUpdateKyc_user } from '../../redux/slices/auth';
+import { activeUser, adminUpdateCurrent_user } from '../../redux/slices/auth';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
@@ -101,8 +101,10 @@ const ActiveUsers = () => {
         
       return (
         <Chip
-        color={user.id==user.kyc_usersuser_id?'success':'danger'}
+        className='cursor-pointer'
+        color={user.id==user.kyc_usersuser_id || user.id==user.investor_usersuser_id || user.id==user.loan_usersuser_id?  'success':'danger'}
         
+        title={user.id==user.kyc_usersuser_id || user.id==user.investor_usersuser_id || user.id==user.loan_usersuser_id? ('Active User'):'Passive User'}
         size='sm'
         variant='flat'
         >
