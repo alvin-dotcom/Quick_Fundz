@@ -425,3 +425,46 @@ export function adminMessage(){
     }
   }
 } */
+
+  export function investedUsers(){
+    return async()=>{
+      try {
+        const response = await axios.get('admin/allInvestment',{withCredentials:true})
+        return response.data;
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  export function loanRequestUsers(){
+    return async()=>{
+      try {
+        const response = await axios.get('admin/allLoanRequest',{withCredentials:true});
+        return response.data;
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  export function updateLoanRequestUser(formValues){
+return async()=>{
+  try {
+    const response = await axios.post('admin/updateLoan_details',formValues);
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+  }
+
+  export function updateInvestedUser(formValues){
+    return async()=>{
+      try {
+        const response = await axios.post('admin/updateInvestor_details',formValues)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
