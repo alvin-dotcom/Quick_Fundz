@@ -18,7 +18,10 @@ exports.requestLoan=asyncHandler(async(req,res)=>{
     const loanRequest = await pool.query(
         "INSERT INTO loan_request_details (name, loan_amount, duration, user_id, rate_of_interest, email, investor_email, investoruser_id, original_amount, original_duration, original_rate_of_interest,investor_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,$12)",
         [name,filteredBody.loanAmount,filteredBody.loanDuration,filteredBody.loanUserId,filteredBody.loanInterestRate,email, filteredBody.investorEmail, filteredBody.investorUserId, filteredBody.investorAmount, filteredBody.investorDuration, filteredBody.investorRate,userId]
+        
     );
+    const updateLoanUser_id= await pool.query("Update users set loan_usersuser_id=$1 where id=$2",[userId,userId])
+
 })
 
 exports.requestInvestor=asyncHandler(async(req,res)=>{
