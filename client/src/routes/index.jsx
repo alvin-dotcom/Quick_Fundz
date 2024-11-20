@@ -20,7 +20,8 @@ import LoanRequestPage from "../pages/dashboard/LoanRequestPage";
 import NegotiateLoanPage from "../pages/dashboard/NegotiateLoanPage";
 import KycStatus from "../pages/dashboard/KYCStatusPage"
 import KycDetails from "../pages/dashboard/KycDetailsPage";
-
+import InvestedUser from "../pages/dashboard/InvestedUsersPage"
+import LoanRequestUser from "../pages/dashboard/LoanRequestUsersPage"
 import ActiveUser from "../pages/dashboard/ActiveUserPage"
 
 export default function Router(){
@@ -46,6 +47,8 @@ export default function Router(){
                 {path:'/admin/kycRequest',element:<KYCRequestPage/>},
                 {path:'/admin/kycdetails',element:<KycDetails/>},
                 {path:'/admin/activeUsers',element:<ActiveUser/>},
+                {path:'/admin/investedUsers',element:<InvestedUser/>},
+                {path:'/admin/loanRequestUsers',element:<LoanRequestUser/>},
                 
                 {path:'404',element:<Page404/>},
                 { path: "*", element: <Navigate to="/404" replace /> }
