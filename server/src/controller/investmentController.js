@@ -20,6 +20,7 @@ exports.createInvestment = asyncHandler(async (req, res,next ) => {
             "INSERT INTO investor_details (name,email,amount, duration, rate_of_interest, user_id) VALUES ($1, $2, $3, $4 , $5 , $6) RETURNING *",
             [name , email,amount, duration, interestRate, userId]
         );
+        const updateUsersInvestorUser_id= await pool.query("Update users set investor_usersuser_id=$1 where id=$2",[userId,userId])
 
         res.status(201).json({
             status: 'success',
