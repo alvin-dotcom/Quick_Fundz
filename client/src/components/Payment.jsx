@@ -1,8 +1,30 @@
+import axios from "axios";
 import React, { useState } from "react";
-import Sidebar from "./Sidebar";
+import {load} from "@cashfreepayments/cashfree-js"
+
 
 const Payment = () => {
-  const [paymentMethod, setPaymentMethod] = useState("upi");
+
+  
+  const handleClick = async (e)=>{
+  e.preventDefault();
+  try {
+    let sessionId = await getSessionId();
+    let checkoutOptions={
+      paymentSessionId:sessionId,
+      redirectTarget:"_modal",
+    }
+
+    cashfree.checkout(checkoutOptions).then((res)=>{
+      console.log("Payment initiate")
+      verifyPayment(orderId)
+    })
+  } catch (error) {
+    console.log(error);
+  }
+  }
+ 
+   /* const [paymentMethod, setPaymentMethod] = useState("upi");
   const [details, setDetails] = useState("");
 
   const handlePaymentMethodChange = (e) => {
@@ -14,9 +36,10 @@ const Payment = () => {
       `Processing payment via ${paymentMethod} with details: ${details}`
     );
   };
-
+ */
   return (
-    <div className="flex h-screen overflow-hidden">
+    <>
+    {/* <div className="flex h-screen overflow-hidden">
       <div className="z-index-50">
         <Sidebar />
       </div>
@@ -105,7 +128,12 @@ const Payment = () => {
           </button>
         </div>
       </div>
-    </div>
+    </div> */}
+   
+
+  <h1>CashFree payment gateway</h1>
+  <button onClick={handleClick}></button>
+  </>
   );
 };
 

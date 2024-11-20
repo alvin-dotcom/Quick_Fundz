@@ -22,6 +22,8 @@ const Sidebar = () => {
       { title: "KYC Request", svg: "https://img.icons8.com/?size=100&id=7857&format=png&color=FFFFFF", href: "/admin/kycRequest" },
       { title: "KYC Details", svg: "https://img.icons8.com/?size=100&id=33843&format=png&color=FFFFFF", href: "/admin/KycDetails" },
       { title: "Active Users", svg: "https://img.icons8.com/?size=100&id=33843&format=png&color=FFFFFF", href: "/admin/activeUsers" },
+      { title: "Invested Users", svg: "https://img.icons8.com/?size=100&id=33843&format=png&color=FFFFFF", href: "/admin/investedUsers" },
+      { title: "Loan Request Users", svg: "https://img.icons8.com/?size=100&id=33843&format=png&color=FFFFFF", href: "/admin/loanRequestUsers" },
     ];
   }
 
